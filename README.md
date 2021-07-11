@@ -3,3 +3,9 @@
 This is modified and more lightweight version of original application to practice UI Automation with Cypress.
 
 The original repo is here: https://github.com/akveo/ngx-admin
+
+run the interface: npm start
+open the interface: localhost:4200
+
+install cypress: npm install cypress --save-dev
+open cypress runner: npx cypress open
