@@ -171,25 +171,31 @@ describe("Form Group", () => {
         cy.contains('Datepicker').click();
         cy.get('ngx-datepicker').find('[placeholder="Form Picker"]').click({force: true});
 
-        function selectDateFromCurrentYear(noOfDaysAwayToday){
+        function selectDateFromCalendar(noOfDaysAwayToday){
             let date = new Date();
             date.setDate(date.getDate() + noOfDaysAwayToday);
     
             const futureDate = date.getDate(),
             futureMonth = date.toLocaleString('default', {month: 'short'}),
             futureYear = date.getFullYear(),
+            assertBtnText = futureMonth + ' ' + futureYear,
             assertDate = futureMonth + ' ' + futureDate + ', ' + futureYear;
-            cy.get('nb-calendar-pageable-navigation').invoke('attr', 'ng-reflect-date').then(btnText => {
+            console.log('Asset button text: ' + assertBtnText);
+
+            cy.get('nb-calendar-navigation button').invoke('text').then(btnText => {
                 console.log('button text: ' + btnText);
                 console.log('Future year: ')
                 console.log('button text: ' + btnText.includes(futureYear));
-                if(! (btnText.includes(futureMonth))){
+                if(! ((btnText.trim()) === assertBtnText)){
                     if(noOfDaysAwayToday > 0){
                         cy.get('[data-name="chevron-right"]').click();
                     }else{
-                        cy.get('[data-name="chevron-left"]').click();
+                        cy.get('nb-calendar-pageable-navigation [data-name="chevron-left"]').click();
                     }
                     
+                    /**
+                     * JS can loop itself by call itself
+                     */
                     selectDateFromCalendar(noOfDaysAwayToday);
                 }else{
                     cy.contains('[class="day-cell ng-star-inserted"]', futureDate).click();
@@ -198,9 +204,14 @@ describe("Form Group", () => {
             return assertDate;
         }
 
-        const noOfDaysAwayToday = 500;
+        /**
+         * TODO: Bug -- 283-312 days before
+         */
+        const noOfDaysAwayToday = -1000;
         const assertDate = selectDateFromCalendar(noOfDaysAwayToday);
+
         console.log('Assert Date: ' + assertDate);
+        
         cy.get('[placeholder="Form Picker"]').invoke('prop', 'value').then(dataPicked => {
             expect(dataPicked).to.equal(assertDate);
         });
