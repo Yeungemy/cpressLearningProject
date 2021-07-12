@@ -205,9 +205,9 @@ describe("Form Group", () => {
         }
 
         /**
-         * TODO: Bug -- 283-312 days before
+         * TODO: Bug -- (-314)-(-285) days before
          */
-        const noOfDaysAwayToday = -1000;
+        const noOfDaysAwayToday = -315;
         const assertDate = selectDateFromCalendar(noOfDaysAwayToday);
 
         console.log('Assert Date: ' + assertDate);
